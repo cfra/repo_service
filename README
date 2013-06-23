@@ -1,0 +1,8 @@
+These are some small scripts I use to allow automatic repository creation.
+
+The service in the backend dir runs on the server where cgit and gitolite
+are installed. It will add repositories as it receives them via XMLRPC.
+
+For the frontend, there is a single page HTML file which uses the XMLRPC
+to create repositories. For that purpose, I serve the file in the frontend
+dir on /create and proxy /create/api to the backend service.

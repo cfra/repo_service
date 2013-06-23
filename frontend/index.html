@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>create repository</title>
+<script src="jquery-1.10.1.min.js"></script>
+<script src="jquery.xmlrpc.min.js"></script>
+<meta name='robots' content='index, nofollow'/>
+<link rel='stylesheet' type='text/css' href='/static/sublab-git.css'/>
+</head>
+<body>
+<div id='cgit'><table id='header'>
+<tr>
+<td class='logo' rowspan='2'><a href='/'><img src='/static/sublab-git.png' alt='cgit logo'/></a></td>
+<td class='main'>create repository</td></tr>
+<tr><td class='sub'>Create a new git repository on git.sublab.org</td></tr></table>
+<table class='tabs'><tr>
+<td><a class='inactive' href='/'>index</a>
+<a class='active' href='/create'>create repository</a></td>
+<td class='form'><form method='get' action='/'>
+<input type='text' name='q' size='10' value=''/>
+<input type='submit' value='search'/>
+</form></td></tr></table>
+<div class='content'>
+<form id='the_form' style='display: none;'>
+<table summary='properties of new repository'>
+<tr class='nohover'><td>Repo Name:</td><td><input type='text' name='name' size='25' /></td></tr>
+<tr class='nohover'><td>Repo Description:</td><td><input type='text' name='description' size='50'/></td></tr>
+<tr class='nohover'><td></td><td><input id='submit' type='submit' value='create'/><img src="spinner.gif" style="display: none;" alt="processing..." id="spinner"></img></td></tr>
+</table>
+</form>
+<p id='message'>I am sorry, but this functionality requires JavaScript.</p>
+</div> <!-- class=content -->
+<div class='footer'></div>
+</div> <!-- id=cgit -->
+</body>
+<script src="repo-create.js"></script>
+</html>
