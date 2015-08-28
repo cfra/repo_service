@@ -12,7 +12,7 @@ repo_desc_re = re.compile(r'^[\w\s]{5,}$')
 
 repo_dir = os.path.dirname(os.path.realpath(__file__))
 repo_dir = os.path.join(repo_dir, 'gitolite')
-repo_git = 'git@git.sublab.org:gitolite-admin.git'
+repo_git = 'git@127.0.0.1:gitolite-admin.git'
 cgit_conf = '/etc/cgitrc.repo_service'
 
 class GitException(Exception):
@@ -62,7 +62,7 @@ def gitolite_append(repo_owner, repo_name, repo_desc):
 
     git_call(['git', 'add', filename], cwd=repo_dir)
     git_call(['git', 'commit',
-            '--author=Repo Service <nobody@nowhere.ws>',
+            '--author=Repo Service <repo_service@localhost>',
             '--message=repo_service: create %s for %s' % (repo_name, repo_owner)],
             cwd=repo_dir)
     git_call(['git', 'push', repo_git, 'master:master'], cwd=repo_dir)
@@ -76,7 +76,7 @@ def cgit_append(repo_owner, repo_name, repo_desc):
 repo.url=%(repo_name)s
 repo.path=/var/lib/git/repositories/%(repo_name)s.git
 repo.desc=%(repo_desc)s
-repo.owner=sublab
+repo.owner=repo-service
 ''' % locals()
 
     with open(cgit_conf, 'a') as cgit_config:
