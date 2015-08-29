@@ -60,13 +60,6 @@ def gitolite_append(repo_owner, repo_name, repo_desc):
         syslog.syslog('could not append to repo_service.conf: %s' % repr(e))
         raise GitException
 
-    git_call(['git', 'add', filename], cwd=repo_dir)
-    git_call(['git', 'commit',
-            '--author=Repo Service <repo_service@localhost>',
-            '--message=repo_service: create %s for %s' % (repo_name, repo_owner)],
-            cwd=repo_dir)
-    git_call(['git', 'push', repo_git, 'master:master'], cwd=repo_dir)
-
 def cgit_append(repo_owner, repo_name, repo_desc):
     repo_date = time.strftime('%a, %d %b %Y %T %z')
     cgit_entry = '''
@@ -74,13 +67,28 @@ def cgit_append(repo_owner, repo_name, repo_desc):
 # at %(repo_date)s
 # for %(repo_owner)s
 repo.url=%(repo_name)s
-repo.path=/var/lib/git/repositories/%(repo_name)s.git
+repo.path=/var/lib/gitolite/repositories/%(repo_name)s.git
 repo.desc=%(repo_desc)s
 repo.owner=repo-service
 ''' % locals()
 
     with open(cgit_conf, 'a') as cgit_config:
         cgit_config.write(cgit_entry)
+
+def gitolite_commit(repo_owner, repo_name):
+    filename = os.path.join(repo_dir, 'conf', 'repo_service.conf')
+    cgit_copy = os.path.join(repo_dir, 'conf', 'cgitrc.repo_service')
+    with open(cgit_conf, 'r') as input_file:
+        with open(cgit_copy, 'w') as output_file:
+            output_file.write(input_file.read())
+
+    git_call(['git', 'add', filename, cgit_copy], cwd=repo_dir)
+    git_call(['git', 'commit',
+            '--author=Repo Service <repo_service@localhost>',
+            '--message=repo_service: create %s for %s' % (repo_name, repo_owner)],
+            cwd=repo_dir)
+    git_call(['git', 'push', repo_git, 'master:master'], cwd=repo_dir)
+
 
 def create_repo(repo_owner, repo_name, repo_desc):
     if repo_name_re.match(repo_name) is None:
@@ -109,6 +117,12 @@ def create_repo(repo_owner, repo_name, repo_desc):
     except EnvironmentError:
         syslog.syslog('cgit_append failed')
         return 'ERROR_CGIT'
+
+    try:
+        gitolite_commit(repo_owner, repo_name)
+    except GitException:
+        syslog.syslog('git commit failed')
+        return 'ERROR_GITOLITE'
 
     syslog.syslog('created repo %s' % repo_name)
     return 'SUCCESS'
