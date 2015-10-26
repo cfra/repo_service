@@ -42,7 +42,7 @@ $(function () {
                 $('#message').text('Repository created successfuly. You will'
                                    + ' be redirected shortly.').show();
 		setTimeout(function() {
-		    window.location.href = 'https://git.sublab.org/' + repo_name + '/';
+		    window.location.href = '/' + repo_name + '/';
 		}, 3000);
             },
             error: function(jqXHR, status, error) {
